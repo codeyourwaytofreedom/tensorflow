@@ -1,0 +1,11 @@
+ tensor creation with shape defined
+ const first_tensor = tf.tensor([1,2,3,4], [2,2])
+
+console log tensor
+first_tensor.print();
+or 
+console.log(first_tensor.toString())
+
+get tensor shape
+console.log(first_tensor.shape)
+

@@ -1,14 +1,14 @@
-import { useEffect } from "react";
-import * as tf from '@tensorflow/tfjs';
+import { useEffect, useState } from "react";
 
 
 const Homie = () => {
+    const [duration, setDuration] = useState(0)
     useEffect(()=>{
-        fetch("/api/hello").then(r => r.json()).then(rj => console.log(rj));
+        fetch("/api/tensorflow").then(r => r.json()).then(rj => setDuration(rj.duration));
     },[])
     return ( 
         <>
-            <h1>Hello TensorFlow Project</h1>
+            <h1>Duration: {duration}</h1>
         </>
      );
 }

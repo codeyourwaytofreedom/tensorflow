@@ -9,3 +9,12 @@ console.log(first_tensor.toString())
 get tensor shape
 console.log(first_tensor.shape)
 
+get tensor info like print()
+first_tensor.dataSync()
+
+get memory use 
+tf.memory()
+
+empty memory 
+x.dispose()
+x = a tensor 

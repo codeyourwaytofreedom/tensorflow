@@ -1,21 +1,21 @@
 import { useEffect, useRef, useState } from "react";
-
+import m from "../styles/Main.module.css";
 import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-webgl';
+import { DetectedObject } from "@tensorflow-models/coco-ssd";
 import serve from "./serve.jpeg";
 import bird from "./bird.jpeg";
 import h from "./h.jpeg";
 import b from "./b.jpeg";
-import { DetectedObject } from "@tensorflow-models/coco-ssd";
+import boat from "./boat.jpeg";
 
 import Image from "next/image";
-
 import { load } from "@tensorflow-models/coco-ssd";
 
 const Homie = () => {
   const im = useRef<HTMLImageElement>(null);
-  const canv = useRef<HTMLCanvasElement>(null)
-  const [result,setResult] = useState<DetectedObject[]>([]);
+  const canv = useRef<HTMLCanvasElement>(null);
+  const [result, setResult] = useState<DetectedObject[]>([]);
 
   useEffect(() => {
     (async () => {
@@ -24,20 +24,28 @@ const Homie = () => {
 
       // Classify the image.
       const predictions = await model.detect(im.current!);
-      setResult(predictions)
-        
-      console.log(predictions);
+      setResult(predictions);
+      console.log(predictions)
 
-        // Draw rectangles on the canvas
-        const canvas = canv.current!;
-        const ctx = canvas.getContext("2d");
+      // Draw rectangles on the canvas
+      const canvas = canv.current!;
+      const ctx = canvas.getContext("2d");
 
-        ctx!.clearRect(0, 0, canvas.width, canvas.height);
+      ctx!.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw rectangles for each prediction
-        predictions.forEach((prediction) => {
+      // Draw rectangles for each prediction
+      predictions.forEach((prediction) => {
         const { bbox } = prediction;
         const [x, y, width, height] = bbox;
+
+        // Adjust the position and scale of the rectangles based on image dimensions
+        const imageElement = im.current!;
+        const scaleX = canvas.width / imageElement.width;
+        const scaleY = canvas.height / imageElement.height;
+        const rectX = x * scaleX;
+        const rectY = y * scaleY;
+        const rectWidth = width * scaleX;
+        const rectHeight = height * scaleY;
 
         // Set the style for the rectangle
         ctx!.strokeStyle = "red";
@@ -45,47 +53,20 @@ const Homie = () => {
 
         // Draw the rectangle
         ctx!.beginPath();
-        ctx!.rect(x, y, width, height);
+        ctx!.rect(rectX, rectY, rectWidth, rectHeight);
         ctx!.stroke();
-        });
-
-      
+      });
     })();
-  }, []);
-
-
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const constraints = { video: true };
-
-    // Function to handle the video stream
-    const handleStream = (stream: MediaStream) => {
-      if (videoRef.current) {
-        videoRef.current.srcObject = stream;
-      }
-    };
-
-    // Function to handle errors
-    const handleError = (error: any) => {
-      console.error("Error accessing webcam:", error);
-    };
-
-    // Access the webcam stream
-/*     navigator.mediaDevices
-      .getUserMedia(constraints)
-      .then(handleStream)
-      .catch(handleError); */
   }, []);
 
   return (
     <>
-        <div style={{ position: "relative", display: "inline-block" }}>
-            <Image src={b} alt="serve" ref={im} />
-            <canvas ref={canv} style={{ position: "absolute", top: 0, left: 0 }} />
+      <div className={m.frame}>
+        <div className={m.frame_kernel}>
+          <Image src={boat} alt="serve" ref={im} />
+          <canvas ref={canv} />
         </div>
-      <h1>{result.length}</h1>
-      <video ref={videoRef} autoPlay playsInline />
+      </div>
     </>
   );
 };

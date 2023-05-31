@@ -1,0 +1,31 @@
+.frame {
+  border: 2px solid red;
+  height: 100vh;
+  display: grid;
+  justify-content: center;
+  align-items: center;
+}
+.frame_kernel {
+  border: 2px solid black;
+  position: relative;
+  width: 405px;
+  height: 400px;
+}
+.frame_kernel img {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  -o-object-fit: contain;
+     object-fit: contain;
+  left: 0;
+  top: 0;
+  z-index: -1;
+}
+.frame_kernel canvas {
+  z-index: 99 !important;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 400px;
+  height: 400px;
+}/*# sourceMappingURL=Main.module.css.map */

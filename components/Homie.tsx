@@ -15,79 +15,69 @@ import { load } from "@tensorflow-models/coco-ssd";
 
 const Homie = () => {
   const im = useRef<HTMLImageElement>(null);
-  const canv = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
-  const [result, setResult] = useState<DetectedObject[]>([]);
-
   useEffect(() => {
-    (async () => {
-      // Load the model.
-      //const model = await load();
-
-      // Classify the image.
-      //const predictions = await model.detect(im.current!);
-
-      //console.log(predictions)
-
-      // Draw rectangles on the canvas
-      const canvas = canv.current!;
-      const ctx = canvas.getContext("2d");
-
-      ctx!.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw rectangles for each prediction
-/*       predictions.forEach((prediction) => {
-        const { bbox } = prediction;
-        const [x, y, width, height] = bbox;
-
-        // Adjust the position and scale of the rectangles based on image dimensions
-        const imageElement = im.current!;
-        const scaleX = canvas.width / imageElement.width;
-        const scaleY = canvas.height / imageElement.height;
-        const rectX = x * scaleX;
-        const rectY = y * scaleY;
-        const rectWidth = width * scaleX;
-        const rectHeight = height * scaleY;
-
-        // Set the style for the rectangle
-        ctx!.strokeStyle = "red";
-        ctx!.lineWidth = 2;
-
-        // Draw the rectangle
-        ctx!.beginPath();
-        ctx!.rect(rectX, rectY, rectWidth, rectHeight);
-        ctx!.stroke();
-      }); */
-
-    })();
-  }, []);
-
-/*   useEffect(() => {
-    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
-      // Access the webcam stream
-      navigator.mediaDevices
-        .getUserMedia({ video: true })
-        .then((stream) => {
-          // Set the video source to the stream
+    const loadModelAndDetect = async () => {
+      try {
+        if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+          // Access the webcam stream
+          const stream = await navigator.mediaDevices.getUserMedia({ video: true });
           videoRef.current!.srcObject = stream;
-        }).then( async ()=> {
+  
+          // Load the model
           const model = await load();
-          const predictions = await model.detect(videoRef.current!);
-          console.log(predictions)
-        })
-        .catch((error) => {
-          console.log("Error accessing webcam:", error);
-        });
-    }
-  }, []); */
+  
+          // Continuously detect objects on each video frame
+          const detectObjects = async () => {
+            // Capture the current video frame
+            const video = videoRef.current!;
+            const canvas = canvasRef.current!;
+            const videoWidth = video.videoWidth;
+            const videoHeight = video.videoHeight;
+            canvas.width = videoWidth;
+            canvas.height = videoHeight;
+            const ctx = canvas.getContext("2d")!;
+            ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
+  
+            // Run object detection on the captured frame
+            const predictions = await model.detect(video);
+            console.log(predictions);
+  
+            // Draw rectangles on the canvas for each prediction
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = "red";
+            predictions.forEach((prediction) => {
+              const [x, y, width, height] = prediction.bbox;
+              ctx.beginPath();
+              ctx.rect(x, y, width, height);
+              ctx.stroke();
+            });
+  
+            // Call detectObjects again for the next video frame
+            requestAnimationFrame(detectObjects);
+          };
+  
+          // Start object detection on the video stream
+          detectObjects();
+        }
+      } catch (error) {
+        console.log("Error accessing webcam:", error);
+      }
+    };
+  
+    loadModelAndDetect();
+  }, []);
+  
 
   return (
     <>
       <div className={m.frame}>
         <div className={m.frame_kernel}>
-          <video ref={videoRef} autoPlay playsInline />
-          <canvas ref={canv} />
+          <video ref={videoRef} autoPlay playsInline width={400} height={400} />
+          <canvas ref={canvasRef} width={400} height={400}/>
         </div>
       </div>
     </>

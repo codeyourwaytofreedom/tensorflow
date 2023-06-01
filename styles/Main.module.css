@@ -9,16 +9,14 @@
   position: relative;
   width: 400px;
   height: 400px;
-  display: grid;
-  justify-content: center;
-  align-items: center;
 }
 .frame_kernel video {
   border: 2px solid red;
   background-color: rgba(255, 255, 0, 0.3);
   width: 400px;
   height: 400px;
-  z-index: -1 !important;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 .frame_kernel canvas {
   z-index: 99 !important;

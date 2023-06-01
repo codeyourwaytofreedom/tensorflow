@@ -8,15 +8,13 @@
         position: relative;
         width: 400px;
         height: 400px;
-        display: grid;
-        justify-content: center;
-        align-items: center;
+
         video{
             border: 2px solid red;
             background-color: rgba($color: yellow, $alpha: 0.3);
             width: 400px;
             height: 400px;
-            z-index: -1 !important;
+            object-fit: cover;
         }
         canvas{
             z-index: 99 !important;
@@ -28,7 +26,6 @@
             border: 3px solid blue;
             background: transparent;
             z-index: 99 !important;
-
         }
 
     }

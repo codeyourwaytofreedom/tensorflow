@@ -11,6 +11,7 @@ const Voice = () => {
   const [rec, setRec] = useState<any>()
   const [action, setAction] = useState<string>();
   const [labels, setLabels] = useState<string[]>();
+  const [detected, setDetected] = useState<any>();
 
   const loadModel = async () =>{
     // start loading model
@@ -34,7 +35,7 @@ const Voice = () => {
   
 
   const NUM_FRAMES = 3;
-  const [examples, setEx] = useState<object[]>([]);
+  const [examples, setEx] = useState<any[]>([]);
 
   function collect (label:number | null) {
     if(rec){
@@ -46,8 +47,7 @@ const Voice = () => {
       }
       rec.listen(async ({spectrogram: {frameSize, data}}) => {
         let vals = normalize(data.subarray(-frameSize * NUM_FRAMES));
-        console.log(vals,label)
-        //examples.push({vals, label});
+        //console.log(vals,label)
         setEx([...examples, {vals,label}])
       }, {
         overlapFactor: 0.999,
@@ -70,12 +70,11 @@ const Voice = () => {
     const xsShape = [examples.length, ...INPUT_SHAPE];
     const xs = tf.tensor(flatten(examples.map(e => e.vals)), xsShape);
    
-    await actual_model.fit(xs, ys, {
+    await model.fit(xs, ys, {
       batchSize: 16,
       epochs: 10,
       callbacks: {
         onEpochEnd: (epoch:any, logs:any) => {
-          console.log(epoch,logs)
         }
       }
     });
@@ -112,6 +111,37 @@ const Voice = () => {
     return result;
    }
 
+   async function moveSlider(labelTensor:any) {
+    const label = (await labelTensor.data())[0];
+    console.log(label);
+    setDetected(label)
+
+    if (label == 2) {
+      return;
+    }
+   }
+
+
+   function listen() {
+    if (rec.isListening()) {
+      rec.stopListening();
+      return;
+    }   
+    rec.listen(async ({spectrogram: {frameSize, data}}) => {
+      const vals = normalize(data.subarray(-frameSize * NUM_FRAMES));
+      const input = tf.tensor(vals, [1, ...INPUT_SHAPE]);
+      const probs = model.predict(input);
+      const predLabel = probs.argMax(1);
+      await moveSlider(predLabel);
+      tf.dispose([input, probs, predLabel]);
+    }, {
+      overlapFactor: 0.999,
+      includeSpectrogram: true,
+      invokeCallbackOnNoiseAndUnknown: true
+    });
+    //setTimeout(() => rec.stopListening(), 10e3);
+   }
+
 
   return (
     <>
@@ -122,7 +152,9 @@ const Voice = () => {
       <button id="noise" onMouseDown={()=>collect(2)} onMouseUp={()=>collect(null)}>Noise</button>
       <h1>Train the model</h1>
       <button onClick={()=> train()}>Train</button>
-
+      <h1>Test the model</h1>
+      <button onClick={()=> listen()}>Listen</button>
+      <h1>{detected && detected}</h1>
 
     </>
   );

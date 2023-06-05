@@ -24,7 +24,7 @@ const Voice = () => {
     setRec(recognizer);
 
    // store command word list to state
-    setLabels(recognizer.wordLabels());
+    //setLabels(recognizer.wordLabels());
 
   }
 
@@ -50,7 +50,7 @@ const Voice = () => {
         //console.log(vals,label)
         setEx([...examples, {vals,label}])
       }, {
-        overlapFactor: 0.999,
+        overlapFactor: 0.9999,
         includeSpectrogram: true,
         invokeCallbackOnNoiseAndUnknown: true
       });
@@ -75,6 +75,7 @@ const Voice = () => {
       epochs: 10,
       callbacks: {
         onEpochEnd: (epoch:any, logs:any) => {
+          console.log(epoch,logs)
         }
       }
     });
@@ -113,12 +114,7 @@ const Voice = () => {
 
    async function moveSlider(labelTensor:any) {
     const label = (await labelTensor.data())[0];
-    console.log(label);
-    setDetected(label)
-
-    if (label == 2) {
-      return;
-    }
+      setDetected(label);
    }
 
 
@@ -135,7 +131,7 @@ const Voice = () => {
       await moveSlider(predLabel);
       tf.dispose([input, probs, predLabel]);
     }, {
-      overlapFactor: 0.999,
+      overlapFactor: 0.95999,
       includeSpectrogram: true,
       invokeCallbackOnNoiseAndUnknown: true
     });

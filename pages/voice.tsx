@@ -11,7 +11,7 @@ const Voice = () => {
   const [rec, setRec] = useState<any>()
   const [action, setAction] = useState<string>();
   const [labels, setLabels] = useState<string[]>();
-  const [detected, setDetected] = useState<any>();
+  const [detected, setDetected] = useState<number>();
 
   const loadModel = async () =>{
     // start loading model
@@ -25,12 +25,20 @@ const Voice = () => {
 
    // store command word list to state
     //setLabels(recognizer.wordLabels());
-
   }
+
+  const load_from_LS = async () => {
+    const loadedModel = await tf.loadLayersModel('localstorage://gunshot');
+    setModel(loadedModel)
+    // Use the loaded model for inference or further operations
+  };
+
+
 
   useEffect(() => {
     loadModel();
-    buildModel();
+    //buildModel();
+    load_from_LS();
   }, []);
   
 
@@ -62,7 +70,7 @@ const Voice = () => {
     const std = 10;
     return x.map((x:any) => (x - mean) / std);
   }
-
+  
   const INPUT_SHAPE = [NUM_FRAMES, 232, 1];
 
   async function train() {
@@ -76,6 +84,9 @@ const Voice = () => {
       callbacks: {
         onEpochEnd: (epoch:any, logs:any) => {
           console.log(epoch,logs)
+        },
+        onTrainEnd: async () => {
+          await model.save('localstorage://gunshot');
         }
       }
     });
@@ -131,11 +142,10 @@ const Voice = () => {
       await moveSlider(predLabel);
       tf.dispose([input, probs, predLabel]);
     }, {
-      overlapFactor: 0.95999,
+      overlapFactor: 0.999,
       includeSpectrogram: true,
       invokeCallbackOnNoiseAndUnknown: true
     });
-    //setTimeout(() => rec.stopListening(), 10e3);
    }
 
 
@@ -151,6 +161,7 @@ const Voice = () => {
       <h1>Test the model</h1>
       <button onClick={()=> listen()}>Listen</button>
       <h1>{detected && detected}</h1>
+      <div style={{width:"300px", height:"300px", backgroundColor:detected === 0 ? "red" : "white" }}></div>
 
     </>
   );

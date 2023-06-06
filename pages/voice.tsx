@@ -13,7 +13,7 @@ const Voice = () => {
   const [labels, setLabels] = useState<string[]>();
   const [detected, setDetected] = useState<number>();
 
-  const loadModel = async () =>{
+  const loadRecognizer = async () =>{
     // start loading model
     const recognizer = speech.create("BROWSER_FFT") ;
 
@@ -27,18 +27,29 @@ const Voice = () => {
     //setLabels(recognizer.wordLabels());
   }
 
-  const load_from_LS = async () => {
-    const loadedModel = await tf.loadLayersModel('localstorage://gunshot');
-    setModel(loadedModel)
-    // Use the loaded model for inference or further operations
+  const load_or_build_model = async () => {
+    try{
+          const loadedModel = await tf.loadLayersModel('localstorage://gunshot');
+          const optimizer = tf.train.adam(0.01);
+          loadedModel.compile({
+            optimizer,
+            loss: 'categoricalCrossentropy',
+            metrics: ['accuracy']
+          });
+          setModel(loadedModel);
+          console.log("existing model loaded")
+    }
+    catch(error){
+      buildModel();
+      console.log("new model built from scratch")
+    }
   };
 
 
 
   useEffect(() => {
-    loadModel();
-    //buildModel();
-    load_from_LS();
+    loadRecognizer();   
+    load_or_build_model();
   }, []);
   
 
@@ -77,7 +88,7 @@ const Voice = () => {
     const ys = tf.oneHot(examples.map(e => e.label), 3);
     const xsShape = [examples.length, ...INPUT_SHAPE];
     const xs = tf.tensor(flatten(examples.map(e => e.vals)), xsShape);
-   
+
     await model.fit(xs, ys, {
       batchSize: 16,
       epochs: 10,
@@ -113,7 +124,6 @@ const Voice = () => {
       metrics: ['accuracy']
     });
     setModel(newModel);
-    console.log("model built");
    }
 
    function flatten(tensors:any) {

@@ -159,7 +159,7 @@ const Voice = () => {
     });
    }
 
-   const [fired, setFired] = useState<string>("");
+   const [fired, setFired] = useState<number>(0);
 
    useEffect(() => {
     let timer:ReturnType<typeof setTimeout>;;
@@ -167,8 +167,8 @@ const Voice = () => {
     if (detected === 0) {
       timer = setTimeout(() => {
         console.log("0 oldu");
-        setFired("Fired after persising for more than 500 miliseconds...");
-      }, 500);
+        setFired(fired => fired+1);
+      }, 10);
     }
   
     return () => clearTimeout(timer); // Clear the timer when the component unmounts or `detected` changes

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-webgl';
 import { useState } from "react";
@@ -50,6 +50,7 @@ const Voice = () => {
   useEffect(() => {
     loadRecognizer();   
     load_or_build_model();
+    //buildModel();
   }, []);
   
 
@@ -158,19 +159,35 @@ const Voice = () => {
     });
    }
 
+   const [fired, setFired] = useState<string>("");
+
+   useEffect(() => {
+    let timer:ReturnType<typeof setTimeout>;;
+  
+    if (detected === 0) {
+      timer = setTimeout(() => {
+        console.log("0 oldu");
+        setFired("Fired after persising for more than 500 miliseconds...");
+      }, 500);
+    }
+  
+    return () => clearTimeout(timer); // Clear the timer when the component unmounts or `detected` changes
+  
+  }, [detected]);
 
   return (
     <>
       <h1>Collect samples</h1>
       <h1>Number of samples: {examples.length}</h1>
-      <button id="left" onMouseDown={()=>collect(0)} onMouseUp={()=>collect(null)}>Left</button>
-      <button id="right" onMouseDown={()=>collect(1)} onMouseUp={()=>collect(null)}>Right</button>
-      <button id="noise" onMouseDown={()=>collect(2)} onMouseUp={()=>collect(null)}>Noise</button>
+      <button id="left" onMouseDown={()=>collect(0)} onMouseUp={()=>collect(null)}>Distinct Sound</button>
+      <button id="right" onMouseDown={()=>collect(1)} onMouseUp={()=>collect(null)}>Talk</button>
+      <button id="noise" onMouseDown={()=>collect(2)} onMouseUp={()=>collect(null)}>Silence</button>
       <h1>Train the model</h1>
       <button onClick={()=> train()}>Train</button>
       <h1>Test the model</h1>
       <button onClick={()=> listen()}>Listen</button>
       <h1>{detected && detected}</h1>
+      <h1>{fired}</h1>
       <div style={{width:"300px", height:"300px", backgroundColor:detected === 0 ? "red" : "white" }}></div>
 
     </>

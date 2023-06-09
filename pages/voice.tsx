@@ -157,30 +157,45 @@ const Voice = () => {
       includeSpectrogram: true,
       invokeCallbackOnNoiseAndUnknown: true
     });
+    setStart(true)
    }
 
    const [fired, setFired] = useState<number>(0);
+   const [start, setStart] = useState<boolean>(false);
 
    useEffect(() => {
-    let timer:ReturnType<typeof setTimeout>;;
-  
+    let timer:ReturnType<typeof setTimeout>;
+
     if (detected === 0) {
       timer = setTimeout(() => {
         console.log("0 oldu");
         setFired(fired => fired+1);
-      }, 10);
+      }, 300);
     }
   
-    return () => clearTimeout(timer); // Clear the timer when the component unmounts or `detected` changes
-  
+    return () => clearTimeout(timer);
+
   }, [detected]);
+
+/*   useEffect(() => {
+    if(!start) return;
+    if (detected === 0) return;
+
+    const interval = setInterval(() => {
+      setFired(prevCount => prevCount - 1);
+    }, 500);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [detected,start]);  */
 
   return (
     <>
       <h1>Collect samples</h1>
       <h1>Number of samples: {examples.length}</h1>
-      <button id="left" onMouseDown={()=>collect(0)} onMouseUp={()=>collect(null)}>Distinct Sound</button>
-      <button id="right" onMouseDown={()=>collect(1)} onMouseUp={()=>collect(null)}>Talk</button>
+      <button id="left" onMouseDown={()=>collect(0)} onMouseUp={()=>collect(null)}>Action Sound</button>
+      <button id="right" onMouseDown={()=>collect(1)} onMouseUp={()=>collect(null)}>Other sounds</button>
       <button id="noise" onMouseDown={()=>collect(2)} onMouseUp={()=>collect(null)}>Silence</button>
       <h1>Train the model</h1>
       <button onClick={()=> train()}>Train</button>

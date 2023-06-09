@@ -170,7 +170,7 @@ const Voice = () => {
       timer = setTimeout(() => {
         console.log("0 oldu");
         setFired(fired => fired+1);
-      }, 300);
+      }, 250);
     }
   
     return () => clearTimeout(timer);

@@ -31,89 +31,41 @@
 }
 
 .game {
-  border: 2px solid black;
-  background-image: radial-gradient(#CCCCCC, #000000);
   height: 100vh;
   position: relative;
+  display: grid;
+  align-items: center;
+  justify-content: center;
 }
 .game_mainline {
-  border: 2px solid orange;
-  height: 200px;
+  display: flex;
+}
+.game_mainline img {
+  -o-object-fit: contain;
+     object-fit: contain;
+  height: 400px;
+  width: 400px;
+}
+.game_arrows {
   position: absolute;
+  border: 2px solid blue;
   width: 100%;
-  bottom: 100px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
-.game_mainline_jumper {
-  border: 3px solid yellow;
-  width: 150px;
-  height: 150px;
-  background-image: url("../public/1.png");
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-  -webkit-animation: jump 0.9s infinite;
-          animation: jump 0.9s infinite;
-  position: relative;
+.game_arrows button {
+  font-size: 90px !important;
+  border: none;
+  background: transparent;
 }
-
-@-webkit-keyframes jump {
-  0% {
-    background-image: url("../public/1.png");
-    left: 0;
-  }
-  16% {
-    background-image: url("../public/2.png");
-    left: 10px;
-  }
-  32% {
-    background-image: url("../public/3.png");
-    left: 20px;
-  }
-  48% {
-    background-image: url("../public/4.png");
-    left: 30px;
-  }
-  64% {
-    background-image: url("../public/5.png");
-    left: 40px;
-  }
-  80% {
-    background-image: url("../public/6.png");
-    left: 50px;
-  }
-  100% {
-    background-image: url("../public/7.png");
-    left: 60px;
-  }
+.game_arrows div {
+  padding: 30px 50px;
 }
-
-@keyframes jump {
-  0% {
-    background-image: url("../public/1.png");
-    left: 0;
-  }
-  16% {
-    background-image: url("../public/2.png");
-    left: 10px;
-  }
-  32% {
-    background-image: url("../public/3.png");
-    left: 20px;
-  }
-  48% {
-    background-image: url("../public/4.png");
-    left: 30px;
-  }
-  64% {
-    background-image: url("../public/5.png");
-    left: 40px;
-  }
-  80% {
-    background-image: url("../public/6.png");
-    left: 50px;
-  }
-  100% {
-    background-image: url("../public/7.png");
-    left: 60px;
-  }
+.game_arrows :nth-child(1) {
+  display: flex;
+  justify-content: flex-start;
+}
+.game_arrows :nth-child(2) {
+  display: flex;
+  justify-content: flex-end;
 }/*# sourceMappingURL=Main.module.css.map */

@@ -32,57 +32,42 @@
 }
 
 .game{
-    border: 2px solid black;
-    background-image: radial-gradient(#CCCCCC, #000000);
+    //background-image: radial-gradient(#CCCCCC, #000000);
     height: 100vh;
     position: relative;
+    display: grid;
+    align-items: center;
+    justify-content: center;
     &_mainline{
-        border: 2px solid orange;
-        height: 200px;
-        position: absolute;
-        width: 100%;
-        bottom: 100px;
-        &_jumper{
-            border:3px solid yellow;
-            width: 150px;
-            height: 150px;
-            background-image: url("../public/1.png");
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            animation: jump 0.9s infinite;
-            position: relative;
+        //border: 2px solid orange;
+        display: flex;
+        img{
+            object-fit: contain;
+            height: 400px;
+            width: 400px;
         }
     }
-}
-
-@keyframes jump {
-    0%{
-        background-image: url("../public/1.png");
-        left: 0;
-    }
-    16%{
-        background-image: url("../public/2.png");
-        left: 10px;
-    }
-    32%{
-        background-image: url("../public/3.png");
-        left: 20px;
-    }
-    48%{
-        background-image: url("../public/4.png");
-        left: 30px;
-    }
-    64%{
-        background-image: url("../public/5.png");
-        left: 40px;
-    }
-    80%{
-        background-image: url("../public/6.png");
-        left: 50px;
-    }
-    100%{
-        background-image: url("../public/7.png");
-        left: 60px;
+    &_arrows{
+        position: absolute;
+        border: 2px solid blue;
+        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        button{
+            font-size: 90px !important;
+            border: none;
+            background: transparent;
+        }
+        div{
+            padding: 30px 50px;
+        }
+        :nth-child(1){
+            display: flex;
+            justify-content: flex-start;
+        }
+        :nth-child(2){
+            display: flex;
+            justify-content: flex-end;
+        }
     }
 }

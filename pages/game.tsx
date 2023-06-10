@@ -5,33 +5,23 @@ import { ReactNode, useEffect } from "react";
 import '@tensorflow/tfjs-backend-cpu';
 import '@tensorflow/tfjs-backend-webgl';
 import * as speech from "@tensorflow-models/speech-commands";
-import { SpeechCommandRecognizer } from "@tensorflow-models/speech-commands";
 import * as tf from "@tensorflow/tfjs";
 
 const Game = () => {
     const [index,setIndex] = useState<number>(4);
     const [model, setModel] = useState<any>();
     const [rec, setRec] = useState<any>()
-    const [action, setAction] = useState<string>();
-    const [labels, setLabels] = useState<string[]>();
     const [detected, setDetected] = useState<number>();
 
     const handke_forth = () => {
-        if(index === 4){
+        if(index === 7){
             setIndex(1)
         }
         else{
             setIndex(index => index+1)
         }
     }
-    const handke_back= () => {
-        if(index === 1){
-            setIndex(4)
-        }
-        else{
-            setIndex(index => index-1)
-        }
-    }
+
   const loadRecognizer = async () =>{
     const recognizer = speech.create("BROWSER_FFT") ;
     await recognizer.ensureModelLoaded();
@@ -80,6 +70,10 @@ const Game = () => {
    
      }, [detected]);
 
+     useEffect(()=>{
+        handke_forth();
+     },[fired])
+
 
       async function action_funct(labelTensor:any) {
         const label = (await labelTensor.data())[0];
@@ -123,11 +117,9 @@ const Game = () => {
                     </div>
                 </div>
                 <div className={g.game_arrows}>
-                    <div><button onClick={handke_back}>&#10094;</button></div>
-                    <div><button onClick={handke_forth}>&#10095;</button></div>
+                    <div><button >&#10094;</button></div>
+                    <div><button >&#10095;</button></div>
                 </div>
-                <h1>{detected && detected}</h1>
-                <h1>{fired}</h1>
             </div>
         </>
      );

@@ -36,6 +36,19 @@
   display: grid;
   align-items: center;
   justify-content: center;
+  background-image: radial-gradient(circle, white, silver);
+  padding-top: 100px;
+}
+.game_motto {
+  position: absolute;
+  left: 50px;
+  top: 50px;
+  display: flex;
+  align-items: flex-end;
+}
+.game_motto h1 {
+  color: darkorange;
+  text-shadow: 1px 1px black;
 }
 .game_mainline {
   display: flex;
@@ -43,8 +56,8 @@
 .game_mainline img {
   -o-object-fit: contain;
      object-fit: contain;
-  height: 400px;
-  width: 400px;
+  height: 300px;
+  width: 300px;
 }
 .game_arrows {
   position: absolute;
@@ -58,7 +71,7 @@
   background: transparent;
 }
 .game_arrows div {
-  padding: 30px 50px;
+  padding: 50px;
 }
 .game_arrows :nth-child(1) {
   display: flex;

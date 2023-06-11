@@ -32,19 +32,32 @@
 }
 
 .game{
-    //background-image: radial-gradient(#CCCCCC, #000000);
     height: 100vh;
     position: relative;
     display: grid;
     align-items: center;
     justify-content: center;
+    background-image: radial-gradient(circle, white, silver);
+    padding-top: 100px;
+
+    &_motto{
+        position: absolute;
+        left: 50px;
+        top: 50px;
+        display: flex;
+        align-items: flex-end;
+        h1{
+            color: darkorange;
+            text-shadow: 1px 1px black;
+        }
+    }
     &_mainline{
         //border: 2px solid orange;
         display: flex;
         img{
             object-fit: contain;
-            height: 400px;
-            width: 400px;
+            height: 300px;
+            width: 300px;
         }
     }
     &_arrows{
@@ -58,7 +71,7 @@
             background: transparent;
         }
         div{
-            padding: 30px 50px;
+            padding: 50px;
         }
         :nth-child(1){
             display: flex;

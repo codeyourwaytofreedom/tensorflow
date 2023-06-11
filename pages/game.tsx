@@ -14,7 +14,7 @@ const Game = () => {
     const [detected, setDetected] = useState<number>();
 
     const handke_forth = () => {
-        if(index === 7){
+        if(index === 9){
             setIndex(1)
         }
         else{
@@ -63,7 +63,7 @@ const Game = () => {
          timer = setTimeout(() => {
            console.log("0 oldu");
            setFired(fired => fired+1);
-         }, 250);
+         }, 350);
        }
      
        return () => clearTimeout(timer);
@@ -111,9 +111,14 @@ const Game = () => {
     return (
         <>
             <div className={g.game}>
+                <div className={g.game_motto}>
+                  <Image alt={"no"} src={"/tf.png"} width={100} height={100}/>
+                  <h1>Sound-controlled Image Slider</h1>
+                </div>
+                
                 <div className={g.game_mainline}>
                     <div className={g.game_mainline_jumper}>
-                        <Image alt={"no"} src={`/b${index}.png`} width={100} height={100}/>
+                        <Image alt={"no"} src={`/bb${index}.png`} width={100} height={100}/>
                     </div>
                 </div>
                 <div className={g.game_arrows}>
